@@ -1,0 +1,41 @@
+modules:
+  jira:customField:
+    - key: renewal-promo-code-custom-field-ui-kit-2
+      name: Renewal Promo Code
+      description: Promo code validator used in the B2B Renewal form.
+      type: string
+      unlicensedAccess:
+        - customer
+      view:
+        render: native
+        resource: main
+        experience:
+          - issue-view
+          - portal-view
+      edit:
+        resource: edit
+        render: native
+        isInline: true
+        experience:
+          - issue-create
+          - issue-transition
+          - issue-view
+          - portal-request
+          - portal-view
+resources:
+  - key: main
+    path: src/frontend/index.jsx
+  - key: edit
+    path: src/frontend/edit.jsx
+permissions:
+  external:
+    fetch:
+      client:
+        - address: globe-api-staging-732869802745.europe-west1.run.app
+  scopes: []
+app:
+  runtime:
+    name: nodejs24.x
+    memoryMB: 256
+    architecture: arm64
+  id: ari:cloud:ecosystem::app/599494fc-d125-43bc-a3bf-7fe198833c01
