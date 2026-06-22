@@ -22,6 +22,7 @@ const Edit = () => {
     const [validationResult, setValidationResult] = useState(null); 
 
     const onSubmit = useCallback(async() => {
+        console.log('submitting this shit.')
         await view.submit(promoCode)
     }, [view, promoCode]);
 
@@ -45,7 +46,7 @@ const Edit = () => {
         }
 
         try {
-            const BASE_URL = "https://globe-api-staging-732869802745.europe-west1.run.app/public/promo-codes/validate";
+            const BASE_URL = "https://globe-api-121809622543.asia-east1.run.app/public/promo-codes/validate";
             const response = await fetch(BASE_URL, {
                 method: 'POST',
                 headers: {
@@ -68,6 +69,7 @@ const Edit = () => {
             setValidationResult(VALIDATION_STATUS.FAILURE);
         } finally {
             setIsLoading(false);
+            await view.submit(promoCode)
         }
     };
 
@@ -82,17 +84,17 @@ const Edit = () => {
     };
 
     return (
-        <CustomFieldEdit onSubmit={onSubmit} hideActionButtons>     
+        <CustomFieldEdit onSubmit={onSubmit}>     
             <Box xcss={roundedCardStyle}>
                 <Stack space="space.200">
                     <Box>
-                        <Heading size='large'>Promo Code Checker - Test</Heading>
+                        <Heading size='large'>Promo Code Checker</Heading>
                         <Text>Use this section to verify your promo code before submitting your application. 
                             Leave these fields empty if you do not want to use a promo code.
                         </Text>
                     </Box>
                     <Box>
-                        <Label labelFor="promoCode">Promo Code</Label>
+                        <Label labelFor="promoCode">Promo Codes</Label>
                         <Textfield
                             placeholder="Enter your promo code"
                             isRequired
@@ -122,17 +124,21 @@ const Edit = () => {
                     </Box>
                     <Box>
                         { validationResult === VALIDATION_STATUS.SUCCESS && 
-                            <SectionMessage appearance='success'>Promo code is valid.</SectionMessage>
+                            <SectionMessage appearance='success' title="You're All Set! Your Promo Code Is Ready to Use.">Promo code is valid.
+                                Your promo code and company details have been successfully verified! You may now proceed with your renewal request.
+                            </SectionMessage>
                         }
                         { validationResult === VALIDATION_STATUS.FAILURE && 
-                            <SectionMessage appearance='error'>
-                                The promo code you entered is invalid or expired. Please replace it with the correct promo code or remove it.
+                            <SectionMessage appearance='error' title="Promo Code Invalid or Expired.">
+                                The promo code entered is invalid or expired. Please check the promo code and company name, then try again.
                             </SectionMessage>
                         }
                         { validationResult === VALIDATION_STATUS.WARNING && 
-                            <SectionMessage appearance='warning'>
-                                The Promo code you entered is valid but your company name does not exactly match with our records. 
-                                You can still use this promo code but this application will require a manual review by our team.
+                            <SectionMessage appearance='warning' title="Additional Verification Required.">
+                                The promo code entered is valid but the company name provided does not match our records. Please ensure that the registered company name is used when submitting your renewal request. 
+                                <Text>
+                                    You may proceed with your renewal submission, but the promo eligibility will be subject to manual validation and approval.
+                                </Text>
                             </SectionMessage>
                         }
                     </Box>
